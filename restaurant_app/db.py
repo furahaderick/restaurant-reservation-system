@@ -1,6 +1,7 @@
 """PostgreSQL connection pool and small database helpers."""
 
 from contextlib import contextmanager
+
 from psycopg2.pool import SimpleConnectionPool
 
 from restaurant_app.config import get_database_settings

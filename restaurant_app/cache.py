@@ -1,8 +1,8 @@
 """Small Redis cache for table availability."""
 
 import json
+
 import redis
-from redis import Redis
 
 from restaurant_app.config import get_redis_url
 

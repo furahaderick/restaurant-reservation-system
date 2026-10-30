@@ -1,6 +1,7 @@
 """Store a short rating in PostgreSQL and long-form feedback in MongoDB."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError
 
@@ -47,7 +48,7 @@ def add_review(restaurant_id, customer_id, rating, short_comment, detailed_feedb
         "customer_id": customer_id,
         "rating": rating,
         "feedback": detailed_feedback,
-        "created_at": datetime.now(timezone.utc),
+        "created_at": datetime.now(UTC),
     }
     try:
         get_feedback_collection().insert_one(document)
