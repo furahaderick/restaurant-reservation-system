@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "restaurant-reservation-system"
+version = "0.1.0"
+description = "A restaurant reservations and reviews system"
+authors = ["Furaha Yves Derick <yvesderricks@gmail.com>"]
+readme = "README.md"
+packages = [{ include = "restaurant_app" }]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+psycopg2-binary = "^2.9.10"
+pymongo = "^4.10.1"
+python-dotenv = "^1.0.1"
+pre-commit = "^4.7.0"
+redis = {extras = ["hiredis"], version = "^8.1.0"}
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"
