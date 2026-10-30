@@ -1,22 +1,23 @@
 """Reservation and table availability operations."""
 
 from datetime import datetime
+
 from psycopg2.extras import RealDictCursor
 
-from restaurant_app.db import get_connection
 from restaurant_app.cache import (
-    make_availability_key,
-    get_cached_availability,
     cache_availability,
     clear_availability_cache,
+    get_cached_availability,
+    make_availability_key,
 )
+from restaurant_app.db import get_connection
 
 
 def validate_booking(starts_at, ends_at, party_size):
     if not isinstance(party_size, int) or party_size < 1:
         raise ValueError("Party size must be a positive whole number.")
     if not isinstance(starts_at, datetime) or not isinstance(ends_at, datetime):
-        raise ValueError("Start and end times must be datetime values.")
+        raise TypeError("Start and end times must be datetime values.")
     if starts_at.tzinfo is None or ends_at.tzinfo is None:
         raise ValueError("Start and end times must include a timezone.")
     if ends_at <= starts_at:
@@ -103,7 +104,9 @@ def book_reservation(restaurant_id, customer_id, starts_at, ends_at, party_size)
                             break
 
                     if selected_table_id is None:
-                        raise ValueError("No suitable table is available for that time.")
+                        raise ValueError(
+                            "No suitable table is available for that time."
+                        )
 
                     cursor.execute(
                         """
@@ -112,7 +115,13 @@ def book_reservation(restaurant_id, customer_id, starts_at, ends_at, party_size)
                         VALUES (%s, %s, %s, %s, %s)
                         RETURNING id, table_id, customer_id, starts_at, ends_at, party_size, status
                         """,
-                        (selected_table_id, customer_id, starts_at, ends_at, party_size),
+                        (
+                            selected_table_id,
+                            customer_id,
+                            starts_at,
+                            ends_at,
+                            party_size,
+                        ),
                     )
                     row = cursor.fetchone()
                     reservation = {

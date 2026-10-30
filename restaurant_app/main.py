@@ -3,16 +3,15 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from restaurant_app.db import get_connection, close_pool
-from restaurant_app.reservations import find_available_tables, book_reservation
+from restaurant_app.db import close_pool, get_connection
+from restaurant_app.reservations import book_reservation, find_available_tables
 from restaurant_app.reviews import add_review
 
 
 def list_restaurants():
-    with get_connection() as connection:
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT id, name, city FROM restaurants ORDER BY name")
-            rows = cursor.fetchall()
+    with get_connection() as connection, connection.cursor() as cursor:
+        cursor.execute("SELECT id, name, city FROM restaurants ORDER BY name")
+        rows = cursor.fetchall()
 
     print("\nRestaurants")
     for restaurant_id, name, city in rows:
@@ -47,7 +46,9 @@ def main():
 
             elif choice == "3":
                 restaurant_id = int(input("Restaurant ID: "))
-                customer_id = int(input("Customer ID (use 1, 2, or 3 for sample data): "))
+                customer_id = int(
+                    input("Customer ID (use 1, 2, or 3 for sample data): ")
+                )
                 party_size = int(input("Party size: "))
                 reservation = book_reservation(
                     restaurant_id, customer_id, starts_at, ends_at, party_size
@@ -61,8 +62,7 @@ def main():
                 short_comment = input("Short comment: ")
                 detailed_feedback = input("Detailed feedback: ")
                 review_id = add_review(
-                    restaurant_id, customer_id, rating,
-                    short_comment, detailed_feedback
+                    restaurant_id, customer_id, rating, short_comment, detailed_feedback
                 )
                 print(f"Review saved with ID {review_id}.")
 

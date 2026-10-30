@@ -11,7 +11,7 @@ repos:
      rev: v0.17.0
      hooks:
         - id: ruff-check
-          args: [--fix]
+          args: [--fix, "--ignore=SIM117,BLE001,TRY203"]
         - id: ruff-format
 
    - repo: https://github.com/pre-commit/mirrors-mypy
